@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <style>
+            body{
+                text-align: center;
+            }
+            button{
+                margin-top: 20px;
+            }
+
+            h2{
+                font-weight: bold;
+                background-color: #ededed;
+                border: 1px solid red;
+                border-radius: 5px;
+                display: inline-block;
+                padding: 20px;
+                opacity: 0;
+            }
+
+            
+        </style>
+    </head>
+    <body>
+       <h1>max-sub-array algorithm</h1>
+        please enter your array (put ',' between each element) : <input type="text" id="input"><br>
+        <button type="submit" onclick="test()">Calculate and Show Result</button>
+
+        <h4 id="input">Your array : [<span id="sarray"></span>]</h4>
+
+        <h2 id="resultbox">Your Maximum Sub-Array is : [<span id="maxsub"></span>] and its sum is : <span id ="sum"></span></h2>
+        
+        
+        <script>
+
+            value = "";
+            var mid = [];
+            var leftResult = [];
+            var rightResult = [];
+            var crossResult = [];
+            
+            
+            low = 0;
+            high = 100;
+            uniArray = 10000000;
+            
+            function test(){
+                
+                this.value = document.getElementById("input").value;
+                this.array = value.split`,`.map(x=>+x);
+                this.high = array.length -1;
+                const t0 = performance.now();
+                result = this.FindMaximumSubarray(array,0,high,0);
+                const t1 = performance.now();
+                /* ok = this.BruteForce(array,0,high); */
+                console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
+                document.getElementById("sarray").innerText = array;
+                document.getElementById("resultbox").style.opacity = "1";
+                document.getElementById("maxsub").innerText = result;
+                document.getElementById("sum").innerText = result[2];
+            }
+
+            /*------------------------------- cross subarray maximum function -------------------------------- */
+            function FindMaxCrossingSubarray(array,low,mid,high){
+            
+                let leftSum = "check";
+                let sum = 0;
+                let maxLeft;
+                
+                for(i=mid;i>=low;i--){
+                sum = sum + array[i];
+                    if (leftSum == "check" || sum > leftSum ){
+                        leftSum = sum;
+                        maxLeft = i;
+                    } 
+                }
+                let rightSum = "check";
+                sum = 0;
+                let maxRight;
+                for(i=mid + 1;i <= high; i++){
+                sum = sum + array[i];
+                    if (rightSum == "check" || sum > rightSum ){
+                        rightSum = sum;
+                        maxRight = i;
+                    } 
+                }
+                result = [maxLeft, maxRight, leftSum+rightSum];
+                
+                
+                return result;
+            }
+
+
+            function FindMaximumSubarray(array,low,high){
+                let mid;
+                let leftResult;
+                let rightResult;
+                let crossResult;
+              
+               
+                if(low == high){
+                    result = [low, high, array[low]];
+                    return result;
+                }else{    
+                    
+                    mid =  Math.floor((low + high) /2);
+                    
+                    leftResult = FindMaximumSubarray(array,low,mid);
+                    rightResult = FindMaximumSubarray(array,mid+1,high);
+                    crossResult = FindMaxCrossingSubarray(array,low,mid,high);
+                    
+                    
+                    if(leftResult[2] >= rightResult[2] && leftResult[2] >= crossResult[2]){   
+                        return(leftResult);
+                    }else if(rightResult[2] >= leftResult[2] && rightResult[2] >= crossResult[2]){
+                        return(rightResult);
+                    }else{
+                        return(crossResult);
+                    }
+                } 
+            }
+            
+        </script>
+    </body>
+</html>
+
